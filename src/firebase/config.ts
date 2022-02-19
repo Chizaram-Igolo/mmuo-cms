@@ -7,6 +7,7 @@ import {
   collection,
   where,
   getDocs,
+  enableIndexedDbPersistence,
 } from "firebase/firestore";
 import {
   getDatabase,
@@ -18,8 +19,6 @@ import {
 } from "firebase/database";
 import { getStorage } from "firebase/storage";
 import { getFunctions } from "firebase/functions";
-
-import { enableIndexedDbPersistence } from "firebase/firestore";
 
 // if (process.env.NODE_ENV !== "production") {
 //   import("firebase/analytics").then(() => {});

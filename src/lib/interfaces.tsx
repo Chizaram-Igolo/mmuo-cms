@@ -1,6 +1,6 @@
 export interface IModule {
   name: string;
-  bg?: string;
+  bgColor?: string;
   icon?: string;
   intro?: string;
 }

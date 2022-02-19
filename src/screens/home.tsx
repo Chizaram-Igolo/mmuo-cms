@@ -77,32 +77,17 @@ const people = [
 ];
 
 export default function Home() {
-  const [title, setTitle] = useState("");
-  const [intro, setIntro] = useState("");
-  const [moduleGroup, setModuleGroup] = useState("");
   const [moduleGroupSelect, setModuleGroupSelect] = useState(people[3]);
   const [moduleColor, setModuleColor] = useState("white");
   const [loading, setLoading] = useState(false);
 
   const { addToast } = useToasts();
 
-  function handleChangeTitle(val: string) {
-    setTitle(val);
-  }
-
-  function handleChangeModuleGroup(val: string) {
-    setModuleGroup(val);
-  }
-
   function handleChangeModuleGroupSelect(val: IModuleGroupValue) {
     setModuleGroupSelect(val);
 
-    console.log("title", title);
-    console.log("intro", intro);
-    console.log("moduleGroup", moduleGroup);
     console.log("moduleGroupSelect", moduleGroupSelect);
     console.log("moduleColor", moduleColor);
-    console.log("loading", loading);
   }
 
   function handleModuleColor(val: string) {
@@ -110,14 +95,14 @@ export default function Home() {
   }
 
   type FormValues = {
-    title: string;
+    name: string;
     intro: string;
     moduleGroup: string;
   };
 
   // Add a new document in collection "cities"
   async function submitHandler(values: FormValues) {
-    const { title, intro, moduleGroup } = values;
+    const { name, intro, moduleGroup } = values;
 
     setLoading(true);
 
@@ -125,7 +110,7 @@ export default function Home() {
       await addDoc(
         collection(projectFirestore, "modules", moduleGroup, "modules"),
         {
-          title,
+          name,
           intro,
           moduleColor,
           date: timestamp(),
@@ -136,13 +121,11 @@ export default function Home() {
         appearance: "success",
         autoDismiss: true,
       });
-
-      setTitle("");
-      setIntro("");
     } catch (err: any) {
-      console.log(err);
       addToast(
-        <Toast heading="We're sorry">We couldn't upload your post.</Toast>,
+        <Toast heading="We're sorry">
+          We couldn't upload your post. {err}
+        </Toast>,
         {
           appearance: "error",
           autoDismiss: true,
@@ -160,7 +143,7 @@ export default function Home() {
         <Formik
           initialValues={{
             moduleGroup: "",
-            title: "",
+            name: "",
             intro: "",
           }}
           validationSchema={CreateModuleSchema}
@@ -220,20 +203,20 @@ export default function Home() {
                 <div className="basis-[50%]">
                   <label className="block mb-6">
                     <span className="block text-sm font-medium text-slate-700">
-                      Title
+                      Name
                     </span>
                     <TextInput
                       type="text"
-                      name="title"
+                      name="name"
                       placeholder="e.g Verbs"
-                      value={values.title}
+                      value={values.name}
                       onBlurFunc={handleBlur}
                       onChangeFunc={handleChange}
-                      // onChangeFunc={handleChangeTitle}
+                      // onChangeFunc={handleChangeName}
                     />
-                    {errors.title && touched.title && (
+                    {errors.name && touched.name && (
                       <span className="block text-sm pt-2 text-red-600">
-                        {errors.title}
+                        {errors.name}
                       </span>
                     )}
                   </label>
@@ -278,6 +261,7 @@ export default function Home() {
               </label>
 
               <button
+                type="submit"
                 disabled={isSubmitting || !!Object.keys(errors).length}
                 className="absolute right-0 mt-4 bg-green-500 hover:bg-green-600 active:bg-green-900 disabled:bg-gray-400 text-white px-6 py-2 rounded-sm focus:outline-none active:outline-none"
               >

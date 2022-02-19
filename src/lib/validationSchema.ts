@@ -34,10 +34,10 @@ export const CreateModuleSchema = Yup.object().shape({
     .min(3, "Module Group name is too short")
     .max(50, "Email address is too long")
     .required("Please enter a Module Group name"),
-  title: Yup.string()
-    .min(3, "Title is too short")
-    .max(25, "Title is too long")
-    .required("Please enter a title"),
+  name: Yup.string()
+    .min(3, "Name is too short")
+    .max(25, "Name is too long")
+    .required("Please enter a name"),
   intro: Yup.string()
     .min(100, "Introduction is too short")
     .max(900, "Introduction is too long")

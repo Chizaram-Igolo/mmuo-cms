@@ -1,5 +1,6 @@
 import {
   collection,
+  collectionGroup,
   doc,
   limit,
   onSnapshot,
@@ -17,9 +18,15 @@ export default function useGetModuleList(extent?: string) {
   const [latestDoc, setLatestDoc] = useState(null);
 
   useEffect(() => {
+    // const p = projectFirestore.
+    // const q = query(
+    //   collection(projectFirestore, "modules"),
+    //   orderBy("date", "asc")
+    // );
+
     const q = query(
-      collection(projectFirestore, "modules"),
-      orderBy("date", "asc")
+      collectionGroup(projectFirestore, "modules")
+      // orderBy("date", "asc")
     );
 
     let unsubscribe = onSnapshot(
@@ -29,11 +36,10 @@ export default function useGetModuleList(extent?: string) {
 
         if ((extent = "detailed")) {
           querySnapshot.forEach((doc) => {
-            console.log(doc.data());
             foundDocs.push({
               name: doc.data().name,
-              bg: doc.data().bg,
-              icon: doc.data().icon,
+              bgColor: doc.data().moduleColor,
+              intro: doc.data().intro,
             });
           });
         } else {
