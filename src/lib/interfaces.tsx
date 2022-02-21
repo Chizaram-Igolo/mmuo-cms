@@ -3,6 +3,13 @@ export interface IModule {
   bgColor?: string;
   icon?: string;
   intro?: string;
+  moduleGroupId: string;
+}
+
+export interface IModules {
+  moduleGroupId: string;
+  moduleGroup: string;
+  modules: IModule[];
 }
 
 export interface IModuleGroupValue {

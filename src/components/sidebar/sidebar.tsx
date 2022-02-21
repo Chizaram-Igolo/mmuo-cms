@@ -10,8 +10,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useAuth } from "../../contexts/AuthContext";
-import useGetModuleList from "../../hooks/useGetModuleList";
 import { useNavigate } from "react-router-dom";
+import useGetModuleGroups from "../../hooks/useGetModuleGroups";
+import useGetModuleList from "../../hooks/useGetModuleLists";
+import { IModule, IModules } from "../../lib/interfaces";
+import { useEffect, useState } from "react";
 
 interface ISideBar {
   width: number;
@@ -22,10 +25,38 @@ interface ISideBar {
 
 export default function SideBar(props: ISideBar) {
   const { user, signout } = useAuth();
-  const { docs, error, loading, latestDoc } = useGetModuleList();
+  const { moduleGroups, error, loading, latestDoc } = useGetModuleGroups();
+  const { docs, error2, loading2, latestDoc2 } = useGetModuleList("detailed");
+  const [mGs, setmGs] = useState([]);
+
   const navigate = useNavigate();
 
-  //   console.log(docs, error, loading, latestDoc);
+  let moduleGroups_clone = [];
+
+  useEffect(() => {
+    moduleGroups_clone = moduleGroups.slice(0);
+
+    setmGs([]);
+
+    for (let i = 0; i < docs.length; i++) {
+      let idx = moduleGroups_clone.findIndex(
+        (item) =>
+          (item as IModules).moduleGroupId ===
+          (docs[i] as IModule).moduleGroupId
+      );
+
+      if (
+        idx !== -1 &&
+        (moduleGroups_clone[idx] as IModules).modules.findIndex(
+          (item) => item.name === (docs[i] as IModule).name
+        ) === -1
+      ) {
+        (moduleGroups_clone[idx] as IModules).modules.push(docs[i]);
+      }
+    }
+
+    setmGs(moduleGroups_clone);
+  }, [docs]);
 
   const { shouldHideNavText, expandIcon } = props;
 
@@ -43,14 +74,14 @@ export default function SideBar(props: ISideBar) {
       to: "/",
       label: "Modules",
       icon: faBox,
-      childList: docs,
+      moduleGroups: mGs,
     },
     { to: "/settings", label: "Settings", icon: faGear },
   ];
 
   return (
     <nav
-      className={`absolute min-w-[80px] w-[20%] min-h-[100vh] bg-white border-r-2 border-stone-200 z-50`}
+      className={`absolute min-w-[80px] w-[20%] min-h-[100%] bg-white border-r-2 border-stone-200 z-50`}
       id="navBar"
       style={{ width: props.width }}
     >
@@ -67,7 +98,7 @@ export default function SideBar(props: ISideBar) {
           {user && (
             <>
               <div className="pt-2 border-gray-400">
-                <div className="flex items-center">
+                <div className="flex">
                   <div className="flex-shrink-0">
                     {user.photoURL && (
                       <img
@@ -103,6 +134,17 @@ export default function SideBar(props: ISideBar) {
                       </div>
                     </div>
                   )}
+
+                  {!shouldHideNavText && (
+                    <div className="ml-3">
+                      <span
+                        className="inline-block h-[42px] w-[100%] py-0.2 px-5 bg-transparent cursor-pointer text-[1.3rem]"
+                        onClick={handleSignout}
+                      >
+                        <FontAwesomeIcon icon={faRightFromBracket} />
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="mt-3 px-2 space-y-1 text-left">
                   {/* {userNavigation.map((item) => (
@@ -129,22 +171,14 @@ export default function SideBar(props: ISideBar) {
                 title={item.label}
                 shouldHideNavText={shouldHideNavText}
                 key={item.label}
-                childList={item.childList}
+                moduleGroups={item.moduleGroups}
               />
             );
           })}
         </ul>
 
-        <div className="absolute w-[100%] bottom-5">
+        <div className="relative w-[100%]">
           <ul>
-            <li>
-              <span
-                className="inline-block h-[42px] w-[100%] py-0.5 px-5 bg-transparent cursor-pointer text-[1.4rem]"
-                onClick={handleSignout}
-              >
-                <FontAwesomeIcon icon={faRightFromBracket} />
-              </span>
-            </li>
             <li>
               <span
                 className="inline-block h-[42px] w-[100%] py-0.5 px-5 bg-transparent cursor-pointer text-[1.4rem]"

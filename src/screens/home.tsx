@@ -1,5 +1,14 @@
-import React, { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+  addDoc,
+  collection,
+  collectionGroup,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { projectFirestore, timestamp } from "../firebase/config";
 
 import { useToasts } from "react-toast-notifications";
@@ -12,6 +21,7 @@ import { IModuleGroupValue } from "../lib/interfaces";
 import { colors } from "../lib/colors";
 import { CreateModuleSchema } from "../lib/validationSchema";
 import { Formik } from "formik";
+import { get } from "firebase/database";
 
 const people = [
   {
@@ -100,6 +110,17 @@ export default function Home() {
     moduleGroup: string;
   };
 
+  // useEffect(async () => {
+  //   const docRef = query(
+  //     collectionGroup(projectFirestore, "modules"),
+  //     where("name", "==", "The fifth")
+  //   );
+
+  //   const docsSnap = await getDocs(docRef);
+
+  //   console.log(docsSnap.docs[0].ref.parent.parent!.id);
+  // }, []);
+
   // Add a new document in collection "cities"
   async function submitHandler(values: FormValues) {
     const { name, intro, moduleGroup } = values;
@@ -107,15 +128,53 @@ export default function Home() {
     setLoading(true);
 
     try {
-      await addDoc(
-        collection(projectFirestore, "modules", moduleGroup, "modules"),
-        {
-          name,
-          intro,
-          moduleColor,
-          date: timestamp(),
-        }
+      // Check that document exists.
+
+      const docRef = query(
+        collectionGroup(projectFirestore, "modules"),
+        where("moduleGroup", "==", moduleGroup)
       );
+
+      const docsSnap = await getDocs(docRef);
+
+      if (docsSnap.docs.length > 0) {
+        await addDoc(
+          collection(
+            projectFirestore,
+            "moduleGroups",
+            docsSnap.docs[0].ref.parent.parent!.id,
+            "modules"
+          ),
+          {
+            name,
+            intro,
+            moduleColor,
+            moduleGroup,
+            date: timestamp(),
+          }
+        );
+      } else {
+        const doc = await addDoc(collection(projectFirestore, "moduleGroups"), {
+          moduleGroup,
+          date: timestamp(),
+        });
+
+        await addDoc(
+          collection(projectFirestore, "moduleGroups", doc.id, "modules"),
+          {
+            name,
+            intro,
+            moduleColor,
+            moduleGroup,
+            date: timestamp(),
+          }
+        );
+      }
+
+      // docsSnap.forEach((doc) => {
+      //   // doc.data() is never undefined for query doc snapshots
+      //   console.log(doc.id, "==", doc.data());
+      // });
 
       addToast(<Toast>Your post was uploaded.</Toast>, {
         appearance: "success",
