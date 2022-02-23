@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   addDoc,
   collection,
   collectionGroup,
-  doc,
-  getDoc,
   getDocs,
   query,
   where,
@@ -13,95 +11,39 @@ import { projectFirestore, timestamp } from "../firebase/config";
 
 import { useToasts } from "react-toast-notifications";
 import Toast from "../components/Toast";
-import SelectMenu from "../components/inputs/selectmenu";
-import TextInput from "../components/inputs/textinput";
-import ColorPicker from "../components/colorpicker";
-import IconPicker from "../components/iconpicker";
-import { IModuleGroupValue } from "../lib/interfaces";
 import { colors } from "../lib/colors";
 import { CreateModuleSchema } from "../lib/validationSchema";
 import { Formik } from "formik";
-import { get } from "firebase/database";
-
-const people = [
-  {
-    id: 1,
-    name: "Wade Cooper",
-    avatar:
-      "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 2,
-    name: "Arlene Mccoy",
-    avatar:
-      "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 3,
-    name: "Devon Webb",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80",
-  },
-  {
-    id: 4,
-    name: "Tom Cook",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 5,
-    name: "Tanya Fox",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 6,
-    name: "Hellen Schmidt",
-    avatar:
-      "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 7,
-    name: "Caroline Schultz",
-    avatar:
-      "https://images.unsplash.com/photo-1568409938619-12e139227838?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 8,
-    name: "Mason Heaney",
-    avatar:
-      "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 9,
-    name: "Claudie Smitham",
-    avatar:
-      "https://images.unsplash.com/photo-1584486520270-19eca1efcce5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 10,
-    name: "Emil Schaefer",
-    avatar:
-      "https://images.unsplash.com/photo-1561505457-3bcad021f8ee?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-];
+import useGetModuleGroups from "../hooks/useGetModuleGroups";
+import {
+  ColorPicker,
+  IconPicker,
+  SelectMenu,
+  TextArea,
+  TextInput,
+} from "../components";
 
 export default function Home() {
-  const [moduleGroupSelect, setModuleGroupSelect] = useState(people[3]);
+  const { moduleGroups } = useGetModuleGroups();
+
+  const [moduleGroupSelect, setModuleGroupSelect] = useState("");
   const [moduleColor, setModuleColor] = useState("white");
   const [loading, setLoading] = useState(false);
 
+  const [useModuleGroupSelect, setUseModuleGroupSelect] = useState(true);
+
   const { addToast } = useToasts();
 
-  function handleChangeModuleGroupSelect(val: IModuleGroupValue) {
+  function handleChangeModuleGroupSelect(val: string) {
     setModuleGroupSelect(val);
-
-    console.log("moduleGroupSelect", moduleGroupSelect);
-    console.log("moduleColor", moduleColor);
   }
 
   function handleModuleColor(val: string) {
     setModuleColor(val);
+  }
+
+  function toggleUseModuleGroupSelect() {
+    setUseModuleGroupSelect(!useModuleGroupSelect);
   }
 
   type FormValues = {
@@ -129,7 +71,6 @@ export default function Home() {
 
     try {
       // Check that document exists.
-
       const docRef = query(
         collectionGroup(projectFirestore, "modules"),
         where("moduleGroup", "==", moduleGroup)
@@ -171,11 +112,6 @@ export default function Home() {
         );
       }
 
-      // docsSnap.forEach((doc) => {
-      //   // doc.data() is never undefined for query doc snapshots
-      //   console.log(doc.id, "==", doc.data());
-      // });
-
       addToast(<Toast>Your post was uploaded.</Toast>, {
         appearance: "success",
         autoDismiss: true,
@@ -202,6 +138,7 @@ export default function Home() {
         <Formik
           initialValues={{
             moduleGroup: "",
+            moduleGroupSelect: moduleGroupSelect,
             name: "",
             intro: "",
           }}
@@ -219,6 +156,7 @@ export default function Home() {
             touched,
             handleChange,
             handleBlur,
+            setFieldValue,
             handleSubmit,
             isSubmitting,
           }) => (
@@ -227,34 +165,64 @@ export default function Home() {
                 Use Module Groups to organize your Modules.
               </p>
               <div className="w-full flex gap-x-4">
-                <div className="flex-1">
-                  <label className="block mb-6">
-                    <span className="block text-sm font-medium text-slate-700">
-                      Create new Module Group
-                    </span>
-                    <TextInput
-                      type="text"
-                      name="moduleGroup"
-                      placeholder="e.g Basics or Group 1"
-                      value={values.moduleGroup}
+                {useModuleGroupSelect ? (
+                  <div className="flex-1 mb-6">
+                    <SelectMenu
+                      name="moduleGroupSelect"
+                      label="Select existing Module Group"
+                      value={moduleGroupSelect}
                       onBlurFunc={handleBlur}
-                      onChangeFunc={handleChange}
-                      // onChangeFunc={handleChangeModuleGroup}
+                      moduleGroups={moduleGroups}
+                      onChangeFunc={(val) => {
+                        handleChangeModuleGroupSelect(val);
+                        setFieldValue("moduleGroupSelect", val);
+                      }}
                     />
-                    {errors.moduleGroup && touched.moduleGroup && (
+
+                    {errors.moduleGroupSelect && touched.moduleGroupSelect && (
                       <span className="block text-sm pt-2 text-red-600">
-                        {errors.moduleGroup}
+                        {errors.moduleGroupSelect}
                       </span>
                     )}
-                  </label>
-                </div>
+                  </div>
+                ) : (
+                  <div className="flex-1">
+                    <label className="block mb-6">
+                      <span className="block text-sm font-medium text-slate-700">
+                        Create new Module Group
+                      </span>
+                      <TextInput
+                        type="text"
+                        name="moduleGroup"
+                        placeholder="e.g Basics or Group 1"
+                        value={values.moduleGroup}
+                        onBlurFunc={handleBlur}
+                        onChangeFunc={handleChange}
+                        // onChangeFunc={handleChangeModuleGroup}
+                      />
+                      {errors.moduleGroup && touched.moduleGroup && (
+                        <span className="block text-sm pt-2 text-red-600">
+                          {errors.moduleGroup}
+                        </span>
+                      )}
+                    </label>
+                  </div>
+                )}
                 <div className="flex-1">
-                  <SelectMenu
-                    label="Select existing Module Group"
-                    value={moduleGroupSelect}
-                    people={people}
-                    onChangeFunc={handleChangeModuleGroupSelect}
-                  />
+                  <label htmlFor="" className="block mb-6">
+                    <p className="pt-3 block text-sm font-medium text-slate-700">
+                      or &nbsp;
+                      <button
+                        type="button"
+                        className="underline underline-offset-2"
+                        onClick={toggleUseModuleGroupSelect}
+                      >
+                        {useModuleGroupSelect
+                          ? "Create new Module Group"
+                          : "Select existing Module Group"}
+                      </button>
+                    </p>
+                  </label>
                 </div>
               </div>
 
@@ -299,18 +267,13 @@ export default function Home() {
                 <span className="block text-sm font-medium text-slate-700">
                   Introduction (Preface)
                 </span>
-                <textarea
+
+                <TextArea
                   value={values.intro}
                   name="intro"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
                   placeholder="Detail what you want the learner to be aware of before they begin the module."
-                  className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500 textarea
-    "
+                  onBlurFunc={handleBlur}
+                  onChangeFunc={handleChange}
                 />
                 {errors.intro && touched.intro && (
                   <span className="block text-sm pt-2 text-red-600">

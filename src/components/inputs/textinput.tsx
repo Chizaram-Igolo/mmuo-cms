@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 
 interface ITextInput {
   type: string;
@@ -6,7 +6,6 @@ interface ITextInput {
   placeholder: string;
   value: string;
   onBlurFunc?: (e: React.FocusEvent<any, Element>) => void;
-  // onChangeFunc: (val: string) => void;
   onChangeFunc: (e: string | ChangeEvent<any>) => void;
 }
 
@@ -26,7 +25,6 @@ const TextInput: React.FC<ITextInput> = ({
       value={value}
       onBlur={onBlurFunc ? (e) => onBlurFunc(e) : () => {}}
       onChange={onChangeFunc}
-      // onChange={(e) => onChangeFunc(e.target.value)}
       placeholder={placeholder}
       className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500

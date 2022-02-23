@@ -1,6 +1,6 @@
 import { Listbox } from "@headlessui/react";
 import { useRef, useState } from "react";
-import { useDetectOutsideClick } from "../hooks/useDetectOutsideClick";
+import { useDetectOutsideClick } from "../../hooks/useDetectOutsideClick";
 
 const ColorPicker = ({ label, value, colors, onChangeFunc }) => {
   const dropdownRef = useRef(null);

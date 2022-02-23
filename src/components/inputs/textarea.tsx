@@ -1,30 +1,25 @@
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 
-interface ITextInput {
-  type: string;
+interface ITextArea {
   name: string;
   placeholder: string;
-  placement?: string;
   value: string;
   onBlurFunc?: (e: React.FocusEvent<any, Element>) => void;
   onChangeFunc: (e: string | ChangeEvent<any>) => void;
 }
 
-const AuthTextInput: React.FC<ITextInput> = ({
-  type,
+const TextArea: React.FC<ITextArea> = ({
+  value,
   name,
   placeholder,
-  placement,
-  value,
   onBlurFunc,
   onChangeFunc,
   ...rest
 }) => {
   return (
-    <input
-      type={type}
-      name={name}
+    <textarea
       value={value}
+      name={name}
       onBlur={onBlurFunc ? (e) => onBlurFunc(e) : () => {}}
       onChange={onChangeFunc}
       placeholder={placeholder}
@@ -32,11 +27,11 @@ const AuthTextInput: React.FC<ITextInput> = ({
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
       invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500 textarea
     "
       {...rest}
     />
   );
 };
 
-export default AuthTextInput;
+export default TextArea;
