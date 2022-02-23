@@ -116,6 +116,8 @@ export default function Signin() {
             handleChange,
             handleBlur,
             handleSubmit,
+            isValid,
+            dirty,
             isSubmitting,
           }) => (
             <form
@@ -181,7 +183,11 @@ export default function Signin() {
                 </label>
 
                 <button
-                  disabled={isSubmitting || !!Object.keys(errors).length}
+                  disabled={
+                    !(isValid && dirty) ||
+                    !!Object.keys(errors).length ||
+                    isSubmitting
+                  }
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-400 text-white px-6 py-2 rounded-sm focus:ring-4 active:ring-4 focus:ring-blue-500 active:ring-blue-500 font-medium"
                 >

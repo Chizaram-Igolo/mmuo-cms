@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   addDoc,
   collection,
@@ -22,11 +22,16 @@ import {
   TextArea,
   TextInput,
 } from "../components";
+import { IModules } from "../lib/interfaces";
 
 export default function Home() {
   const { moduleGroups } = useGetModuleGroups();
 
-  const [moduleGroupSelect, setModuleGroupSelect] = useState("");
+  const [moduleGroupSelect, setModuleGroupSelect] = useState(
+    localStorage.getItem("moduleGroup")
+      ? (localStorage.getItem("moduleGroup") as string)
+      : ""
+  );
   const [moduleColor, setModuleColor] = useState("white");
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +54,7 @@ export default function Home() {
   type FormValues = {
     name: string;
     intro: string;
-    moduleGroup: string;
+    moduleGroupTextInput: string;
   };
 
   // useEffect(async () => {
@@ -65,9 +70,20 @@ export default function Home() {
 
   // Add a new document in collection "cities"
   async function submitHandler(values: FormValues) {
-    const { name, intro, moduleGroup } = values;
+    const { name, intro, moduleGroupTextInput } = values;
+
+    let moduleGroup;
+
+    if (moduleGroupTextInput && moduleGroupTextInput !== "") {
+      moduleGroup = moduleGroupTextInput;
+    } else {
+      moduleGroup = moduleGroupSelect;
+    }
 
     setLoading(true);
+
+    // Store the last used moduleGroup name for use later.
+    localStorage.setItem("moduleGroup", moduleGroup as string);
 
     try {
       // Check that document exists.
@@ -137,7 +153,7 @@ export default function Home() {
         <h2 className="text-[#333333] mb-4">Create Module</h2>
         <Formik
           initialValues={{
-            moduleGroup: "",
+            moduleGroupTextInput: "",
             moduleGroupSelect: moduleGroupSelect,
             name: "",
             intro: "",
@@ -158,6 +174,8 @@ export default function Home() {
             handleBlur,
             setFieldValue,
             handleSubmit,
+            isValid,
+            dirty,
             isSubmitting,
           }) => (
             <form className="relative" onSubmit={handleSubmit}>
@@ -193,18 +211,18 @@ export default function Home() {
                       </span>
                       <TextInput
                         type="text"
-                        name="moduleGroup"
+                        name="moduleGroupTextInput"
                         placeholder="e.g Basics or Group 1"
-                        value={values.moduleGroup}
+                        value={values.moduleGroupTextInput}
                         onBlurFunc={handleBlur}
                         onChangeFunc={handleChange}
-                        // onChangeFunc={handleChangeModuleGroup}
                       />
-                      {errors.moduleGroup && touched.moduleGroup && (
-                        <span className="block text-sm pt-2 text-red-600">
-                          {errors.moduleGroup}
-                        </span>
-                      )}
+                      {errors.moduleGroupTextInput &&
+                        touched.moduleGroupTextInput && (
+                          <span className="block text-sm pt-2 text-red-600">
+                            {errors.moduleGroupTextInput}
+                          </span>
+                        )}
                     </label>
                   </div>
                 )}
@@ -284,7 +302,11 @@ export default function Home() {
 
               <button
                 type="submit"
-                disabled={isSubmitting || !!Object.keys(errors).length}
+                disabled={
+                  !(isValid && dirty) ||
+                  !!Object.keys(errors).length ||
+                  isSubmitting
+                }
                 className="absolute right-0 mt-4 bg-green-500 hover:bg-green-600 active:bg-green-900 disabled:bg-gray-400 text-white px-6 py-2 rounded-sm focus:outline-none active:outline-none"
               >
                 Submit

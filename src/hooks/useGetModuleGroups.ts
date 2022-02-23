@@ -1,4 +1,4 @@
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { projectFirestore } from "../firebase/config";
 import { IModules } from "../lib/interfaces";
@@ -10,7 +10,10 @@ export default function useGetModuleGroups() {
   const [latestDoc, setLatestDoc] = useState(null);
 
   useEffect(() => {
-    const q = query(collection(projectFirestore, "moduleGroups"));
+    const q = query(
+      collection(projectFirestore, "moduleGroups"),
+      orderBy("date", "asc")
+    );
 
     const unsubscribe = onSnapshot(
       q,
@@ -36,6 +39,7 @@ export default function useGetModuleGroups() {
       (err) => {
         // @ts-ignore
         setError(err);
+        console.log(err);
       }
     );
 

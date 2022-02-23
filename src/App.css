@@ -81,6 +81,11 @@ a {
     @apply text-stone-900;
   }
 
+  .semibold {
+    font-family: "WorkSans_SemiBold", sans-serif;
+    @apply font-semibold;
+  }
+
   .toast-h3 {
     font-size: 1.1rem;
     font-family: "WorkSans_Bold", sans-serif;

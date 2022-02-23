@@ -30,7 +30,7 @@ export const SigninSchema = Yup.object().shape({
 
 export const CreateModuleSchema = Yup.object().shape(
   {
-    moduleGroup: Yup.string()
+    moduleGroupTextInput: Yup.string()
       .min(3, "Module Group name is too short")
       .max(50, "Module Group name is too long")
       .when("moduleGroupSelect", {
@@ -42,8 +42,9 @@ export const CreateModuleSchema = Yup.object().shape(
           .required("Please enter a Module Group name"),
         otherwise: Yup.string(),
       }),
-    moduleGroupSelect: Yup.string().when("moduleGroup", {
-      is: (moduleGroup: string) => !moduleGroup || moduleGroup.length === 0,
+    moduleGroupSelect: Yup.string().when("moduleGroupTextInput", {
+      is: (moduleGroupTextInput: string) =>
+        !moduleGroupTextInput || moduleGroupTextInput.length === 0,
       then: Yup.string().required("Please select a Module Group name"),
       otherwise: Yup.string(),
     }),
@@ -63,5 +64,5 @@ export const CreateModuleSchema = Yup.object().shape(
     //   .oneOf([Yup.ref("password"), null], "Passwords do not match")
     //   .required("Please confirm the password"),
   },
-  [["moduleGroup", "moduleGroupSelect"]]
+  [["moduleGroupTextInput", "moduleGroupSelect"]]
 );

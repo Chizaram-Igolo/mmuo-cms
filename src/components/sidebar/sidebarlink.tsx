@@ -98,14 +98,13 @@ function SideBarLink({
                 showModules[idx] ? "pb-0" : "pb-2"
               }`}
               key={item.moduleGroup}
-              onClick={() => toggleShowModules(idx)}
             >
               {/* <span className="px-8 py-2">{item.moduleGroup}</span> */}
               {/* <span className="inline-block w-[100%] bg-transparent cursor-pointer text-[1.1rem]">
                   <FontAwesomeIcon icon={faEllipsis} />
                 </span> */}
 
-              <div className="flex">
+              <div className="flex" onClick={() => toggleShowModules(idx)}>
                 <span className="inline-block px-8 py-0 basis-[90%]">
                   {item.moduleGroup}
                 </span>

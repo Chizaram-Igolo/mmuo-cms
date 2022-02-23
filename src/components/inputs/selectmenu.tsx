@@ -89,7 +89,7 @@ export default function SelectMenu({
                           /> */}
                           <span
                             className={classNames(
-                              selected ? "font-semibold" : "font-normal",
+                              selected ? "semibold" : "font-normal",
                               "ml-3 block truncate"
                             )}
                           >
