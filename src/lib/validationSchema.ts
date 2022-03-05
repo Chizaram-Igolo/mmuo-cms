@@ -52,10 +52,10 @@ export const CreateModuleSchema = Yup.object().shape(
       .min(3, "Name is too short")
       .max(25, "Name is too long")
       .required("Please enter a name"),
-    intro: Yup.string()
-      .min(100, "Introduction is too short")
-      .max(900, "Introduction is too long")
-      .required("Please enter an introduction for the module"),
+    // intro: Yup.string()
+    //   .min(100, "Introduction is too short")
+    //   .max(900, "Introduction is too long")
+    //   .required("Please enter an introduction for the module"),
     // password: Yup.string()
     //   .min(8, "Password is too short!")
     //   .max(25, "Password is too long!")

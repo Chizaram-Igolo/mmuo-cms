@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   addDoc,
   collection,
@@ -14,18 +14,20 @@ import Toast from "../components/Toast";
 import { colors } from "../lib/colors";
 import { CreateModuleSchema } from "../lib/validationSchema";
 import { Formik } from "formik";
+
 import useGetModuleGroups from "../hooks/useGetModuleGroups";
 import {
   ColorPicker,
   IconPicker,
+  TextEditor,
   SelectMenu,
-  TextArea,
   TextInput,
 } from "../components";
 import { IModules } from "../lib/interfaces";
 
 export default function Home() {
   const { moduleGroups } = useGetModuleGroups();
+  const { addToast } = useToasts();
 
   const [moduleGroupSelect, setModuleGroupSelect] = useState(
     localStorage.getItem("moduleGroup")
@@ -33,11 +35,14 @@ export default function Home() {
       : ""
   );
   const [moduleColor, setModuleColor] = useState("white");
+  const [intro, setIntro] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [useModuleGroupSelect, setUseModuleGroupSelect] = useState(true);
 
-  const { addToast } = useToasts();
+  function handleEditorChange(content: string) {
+    setIntro(content);
+  }
 
   function handleChangeModuleGroupSelect(val: string) {
     setModuleGroupSelect(val);
@@ -53,24 +58,12 @@ export default function Home() {
 
   type FormValues = {
     name: string;
-    intro: string;
     moduleGroupTextInput: string;
   };
 
-  // useEffect(async () => {
-  //   const docRef = query(
-  //     collectionGroup(projectFirestore, "modules"),
-  //     where("name", "==", "The fifth")
-  //   );
-
-  //   const docsSnap = await getDocs(docRef);
-
-  //   console.log(docsSnap.docs[0].ref.parent.parent!.id);
-  // }, []);
-
-  // Add a new document in collection "cities"
   async function submitHandler(values: FormValues) {
-    const { name, intro, moduleGroupTextInput } = values;
+    console.log(intro);
+    const { name, moduleGroupTextInput } = values;
 
     let moduleGroup;
 
@@ -156,7 +149,6 @@ export default function Home() {
             moduleGroupTextInput: "",
             moduleGroupSelect: moduleGroupSelect,
             name: "",
-            intro: "",
           }}
           validationSchema={CreateModuleSchema}
           onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -226,6 +218,7 @@ export default function Home() {
                     </label>
                   </div>
                 )}
+
                 <div className="flex-1">
                   <label htmlFor="" className="block mb-6">
                     <p className="pt-3 block text-sm font-medium text-slate-700">
@@ -257,7 +250,6 @@ export default function Home() {
                       value={values.name}
                       onBlurFunc={handleBlur}
                       onChangeFunc={handleChange}
-                      // onChangeFunc={handleChangeName}
                     />
                     {errors.name && touched.name && (
                       <span className="block text-sm pt-2 text-red-600">
@@ -281,7 +273,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <label className="block">
+              {/* <label className="block">
                 <span className="block text-sm font-medium text-slate-700">
                   Introduction (Preface)
                 </span>
@@ -298,7 +290,40 @@ export default function Home() {
                     {errors.intro}
                   </span>
                 )}
-              </label>
+              </label> */}
+
+              <div className="mt-0">
+                <span className="block text-sm font-medium text-slate-700">
+                  Introduction (Preface)
+                </span>
+                {/* <Editor editorState={editorState} onChange={setEditorState} /> */}
+
+                <TextEditor
+                  name="intro"
+                  className="mt-3 w-[100%] border"
+                  placeholder="Detail what you want the learner to be aware of before they begin the module."
+                  onChangeFunc={handleEditorChange}
+                />
+              </div>
+
+              {/* <Editor
+                initialValue="<p>Initial content</p>"
+                init={{
+                  height: 500,
+                  menubar: false,
+                  plugins: [
+                    "advlist autolink lists link image",
+                    "charmap print preview anchor help",
+                    "searchreplace visualblocks code",
+                    "insertdatetime media table paste wordcount",
+                  ],
+                  toolbar:
+                    "undo redo | formatselect | bold italic | \
+            alignleft aligncenter alignright | \
+            bullist numlist outdent indent | help",
+                }}
+                onChange={handleEditorChange}
+              /> */}
 
               <button
                 type="submit"

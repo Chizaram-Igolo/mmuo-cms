@@ -14,6 +14,7 @@ import Signup from "./screens/signup";
 import Home from "./screens/home";
 
 import { AuthProvider } from "./contexts/AuthContext";
+import Module from "./screens/module";
 
 interface IContent {
   navWidth: number;
@@ -127,6 +128,23 @@ class App extends Component<P, S> {
                   />
                 );
               })}
+
+              <Route
+                path="/modules/:id/*"
+                element={
+                  <PrivateRoute location="/">
+                    <Content
+                      navWidth={navWidth}
+                      contentClassName={contentClassName}
+                      shouldHideNavText={shouldHideNavText}
+                      expandIcon={expandIcon}
+                      handleChangeWidth={handleChangeWidth}
+                    >
+                      <Module />
+                    </Content>
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </AuthProvider>
         </div>

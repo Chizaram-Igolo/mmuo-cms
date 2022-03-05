@@ -1,15 +1,12 @@
 import {
-  collection,
   collectionGroup,
-  doc,
-  limit,
   onSnapshot,
   orderBy,
   query,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { projectFirestore } from "../firebase/config";
-import { IModule, IModules } from "../lib/interfaces";
+import { IModule } from "../lib/interfaces";
 
 export default function useGetModuleList(extent?: string) {
   const [loading2, setLoading] = useState(true);
@@ -38,6 +35,7 @@ export default function useGetModuleList(extent?: string) {
                 name: doc.data().name,
                 bgColor: doc.data().moduleColor,
                 intro: doc.data().intro,
+                moduleId: doc.id,
                 moduleGroupId: doc.ref.parent.parent!.id,
               });
             }
@@ -59,7 +57,7 @@ export default function useGetModuleList(extent?: string) {
     );
 
     return unsubscribe;
-  }, []);
+  }, [extent]);
 
   return { docs, error2, loading2, latestDoc2 };
 }

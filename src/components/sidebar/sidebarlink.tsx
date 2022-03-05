@@ -3,7 +3,7 @@ import { faEllipsis, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 import { Link, useMatch } from "react-router-dom";
-import { IModule, IModules } from "../../lib/interfaces";
+import { IModules } from "../../lib/interfaces";
 
 interface ISideBarLink {
   to: string;
@@ -121,10 +121,20 @@ function SideBarLink({
                 >
                   {item.modules.map((module) => (
                     <li
-                      className="py-2 px-8 border-b last:border-b-0 cursor-pointer odd:bg-gray-200"
+                      className="px-8 border-b last:border-b-0 cursor-pointer odd:bg-gray-200"
                       key={module.name}
                     >
-                      <span className="px-4">{module.name}</span>
+                      <Link
+                        to={`/modules/${module.moduleId}`}
+                        className="inline-block w-[100%] h-[100%] py-2"
+                        replace={true}
+                        state={{
+                          moduleId: module.moduleId,
+                          moduleGroupId: module.moduleGroupId,
+                        }}
+                      >
+                        <span className="px-4">{module.name}</span>
+                      </Link>
                     </li>
                   ))}
                 </ul>

@@ -63,7 +63,10 @@ a {
   }
 
   h3 {
+    @apply text-2xl;
+    font-family: "WorkSans_Bold", sans-serif;
     @apply text-stone-800;
+    @apply font-extrabold;
   }
 
   .header-title {

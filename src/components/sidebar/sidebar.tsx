@@ -25,15 +25,14 @@ interface ISideBar {
 
 export default function SideBar(props: ISideBar) {
   const { user, signout } = useAuth();
-  const { moduleGroups, error, loading, latestDoc } = useGetModuleGroups();
-  const { docs, error2, loading2, latestDoc2 } = useGetModuleList("detailed");
+  const { moduleGroups } = useGetModuleGroups();
+  const { docs } = useGetModuleList("detailed");
   const [mGs, setmGs] = useState([]);
 
   const navigate = useNavigate();
 
-  let moduleGroups_clone = [];
-
   useEffect(() => {
+    let moduleGroups_clone = [];
     moduleGroups_clone = moduleGroups.slice(0);
 
     setmGs([]);
@@ -56,7 +55,7 @@ export default function SideBar(props: ISideBar) {
     }
 
     setmGs(moduleGroups_clone);
-  }, [docs]);
+  }, [moduleGroups, docs]);
 
   const { shouldHideNavText, expandIcon } = props;
 
@@ -103,7 +102,7 @@ export default function SideBar(props: ISideBar) {
                     {user.photoURL && (
                       <img
                         src={user.photoURL}
-                        alt="Profile Picture"
+                        alt="Profile pic"
                         width={32}
                         height={32}
                         className="rounded-full"
