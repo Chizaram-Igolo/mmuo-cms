@@ -110,7 +110,7 @@ a {
 }
 
 .content-container-expanded {
-  width: calc(100vw - 150px);
+  width: calc(100vw - 160px);
   float: left;
   margin-left: 140px;
   padding-top: 10px;
@@ -119,10 +119,25 @@ a {
 }
 
 .content-container-collapsed {
-  width: calc(100vw - 330px);
+  width: calc(100vw - 340px);
   float: left;
   margin-left: 320px;
   padding-top: 10px;
   -webkit-transition: margin-left 0.2s;
   transition: margin-left 0.2s;
+}
+
+.upload-btn-wrapper {
+  height: 36px;
+  width: 140px;
+  cursor: pointer;
+}
+
+.upload-btn-wrapper input[type="file"] {
+  position: absolute;
+  height: 40px;
+  width: 140px;
+  opacity: 0;
+  font-size: 0;
+  cursor: pointer !important;
 }

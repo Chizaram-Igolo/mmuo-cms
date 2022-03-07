@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   addDoc,
   collection,
@@ -22,8 +22,12 @@ import {
   TextEditor,
   SelectMenu,
   TextInput,
+  MultiUploadPreview,
 } from "../components";
 import { IModules } from "../lib/interfaces";
+import { uploadMultipleFiles } from "../lib/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   const { moduleGroups } = useGetModuleGroups();
@@ -37,6 +41,11 @@ export default function Home() {
   const [moduleColor, setModuleColor] = useState("white");
   const [intro, setIntro] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [files, setFiles] = useState([]);
+  const [totalBytes, setTotalBytes] = useState(0);
+  const [fileArray, setFileArray] = useState([]);
+  const fileUploadRef = useRef(null);
 
   const [useModuleGroupSelect, setUseModuleGroupSelect] = useState(true);
 
@@ -140,8 +149,45 @@ export default function Home() {
     setLoading(false);
   }
 
+  function handleUploadMultipleFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    uploadMultipleFiles(
+      e,
+      fileArray,
+      setTotalBytes,
+      addToast,
+      fileUploadRef,
+      setLoading
+    );
+  }
+
+  function handleRemoveThumbnail(
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) {
+    let fA = [...fileArray];
+
+    fA.splice(
+      // @ts-ignore
+      fA.findIndex((item) => item.url === e.target.id),
+      1
+    );
+
+    // let _files = [...files];
+
+    // // @ts-ignore
+    // if (splicedItem[0].type === "audio") {
+    //   _files.splice(
+    //     // @ts-ignore
+    //     fA.findIndex((item) => item.name === splicedItem[0].name),
+    //     1
+    //   );
+    // }
+
+    setFileArray(fA);
+    // setFiles(_files);
+  }
+
   return (
-    <section className="py-4 pb-24 px-8 md:px-18 lg:px-20 xl:px-24 z-20 min-h-[28rem] bg-white border border-gray-100">
+    <section className="py-4 pb-24 px-8 md:px-18 lg:px-20 xl:px-24 xl:pr-16 z-20 min-h-[28rem] bg-white border border-gray-100">
       <div className="py-6 w-[100%]">
         <h2 className="text-[#333333] mb-4">Create Module</h2>
         <Formik
@@ -171,7 +217,11 @@ export default function Home() {
             isSubmitting,
           }) => (
             <form className="relative" onSubmit={handleSubmit}>
-              <p className="mb-6 text-sm font-medium text-slate-700">
+              <p
+                className="mb-6 text-sm
+              
+              font-medium text-slate-700"
+              >
                 Use Module Groups to organize your Modules.
               </p>
               <div className="w-full flex gap-x-4">
@@ -273,30 +323,57 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* <label className="block">
+              <div className="w-full flex gap-x-4">
+                <div className="">
+                  <label className="block mb-3">
+                    <span className="block text-sm font-medium text-slate-700">
+                      Upload the audio files you would like to use in your
+                      "Introduction" here:
+                    </span>
+                  </label>
+
+                  <div>
+                    <div className="pt-0 float-left mr-2 upload-btn-wrapper bg-gray-400/30 hover:bg-gray-400/50 active:bg-gray-400/75 rounded-sm cursor-pointer border-2 border-dashed border-gray-600">
+                      <input
+                        type="file"
+                        id="fileUpload"
+                        className="cursor-pointer"
+                        onChange={handleUploadMultipleFiles}
+                        accept="audio/*"
+                        multiple
+                        ref={fileUploadRef}
+                      />
+
+                      <div className="flex items-center justify-center">
+                        <span className="inline-block h-[40px] align-middle mt-[0.4rem] text-center text-sm text-zinc-700">
+                          Select Files
+                          <FontAwesomeIcon
+                            icon={faPaperclip}
+                            className="ml-2"
+                          />
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="bg-orange-400 hover:bg-orange-500 active:bg-orange-600 cursor-pointer disabled:bg-gray-400 text-white text-center text-sm px-6 py-2 rounded-sm"
+                    >
+                      Upload Files
+                    </button>
+                  </div>
+
+                  <MultiUploadPreview
+                    fileArray={fileArray}
+                    handleRemoveThumbnail={handleRemoveThumbnail}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-6">
                 <span className="block text-sm font-medium text-slate-700">
                   Introduction (Preface)
                 </span>
-
-                <TextArea
-                  value={values.intro}
-                  name="intro"
-                  placeholder="Detail what you want the learner to be aware of before they begin the module."
-                  onBlurFunc={handleBlur}
-                  onChangeFunc={handleChange}
-                />
-                {errors.intro && touched.intro && (
-                  <span className="block text-sm pt-2 text-red-600">
-                    {errors.intro}
-                  </span>
-                )}
-              </label> */}
-
-              <div className="mt-0">
-                <span className="block text-sm font-medium text-slate-700">
-                  Introduction (Preface)
-                </span>
-                {/* <Editor editorState={editorState} onChange={setEditorState} /> */}
 
                 <TextEditor
                   name="intro"
@@ -305,25 +382,6 @@ export default function Home() {
                   onChangeFunc={handleEditorChange}
                 />
               </div>
-
-              {/* <Editor
-                initialValue="<p>Initial content</p>"
-                init={{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    "advlist autolink lists link image",
-                    "charmap print preview anchor help",
-                    "searchreplace visualblocks code",
-                    "insertdatetime media table paste wordcount",
-                  ],
-                  toolbar:
-                    "undo redo | formatselect | bold italic | \
-            alignleft aligncenter alignright | \
-            bullist numlist outdent indent | help",
-                }}
-                onChange={handleEditorChange}
-              /> */}
 
               <button
                 type="submit"

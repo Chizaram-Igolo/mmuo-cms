@@ -32,9 +32,9 @@ export default function Module() {
     <section className="py-4 pb-24 px-8 md:px-18 lg:px-20 xl:px-24 z-20 min-h-[28rem] bg-white border border-gray-100">
       {loading && <TopBarProgress />}
       <div className="py-6 w-[100%]">
-        <h2 className="text-[#333333] mb-4">{doc.moduleGroup}</h2>
+        <h4 className="text-[#333333] mb-4">Module Group: {doc.moduleGroup}</h4>
 
-        <h3 className="text-[#333333] mb-4">{doc.name}</h3>
+        <h3 className="text-[#333333] mb-10">Module: {doc.name}</h3>
         <Formik initialValues={{}} onSubmit={() => {}}>
           {({ errors, handleSubmit, isValid, dirty, isSubmitting }) => (
             <form className="relative" onSubmit={handleSubmit}>

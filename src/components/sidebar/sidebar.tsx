@@ -80,11 +80,11 @@ export default function SideBar(props: ISideBar) {
 
   return (
     <nav
-      className={`absolute min-w-[80px] w-[20%] min-h-[100%] bg-white border-r-2 border-stone-200 z-50`}
+      className={`fixed min-w-[80px] w-[20%] min-h-[100vh] bg-white border-r-2 border-stone-200 z-50`}
       id="navBar"
       style={{ width: props.width }}
     >
-      <div className="w-[100%] flex h-[50px] pl-[10px] mb-[22px] bg-slate-900 text-white">
+      <div className="w-[100%] flex h-[50px] pl-[10px] mb-[22px] bg-slate-700 text-white">
         {/* <div>
           <h2 className="h-[50px] p-1">
             <Link href="/cms">

@@ -1,4 +1,5 @@
 import SunEditor, { buttonList } from "suneditor-react";
+import { template } from "suneditor/src/plugins";
 import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
 
 import "./styles/richtexteditor.css";
@@ -168,6 +169,10 @@ const TextEditor: React.FC<ITextEditor> = ({
     (theButtonList.complex[8] as string[]).push("audio");
   }
 
+  if (theButtonList.complex[11].includes("save")) {
+    (theButtonList.complex[11] as string[]).shift();
+  }
+
   // @ts-ignore
   function handleAudioUpload(targetElement) {
     if (typeof window !== "undefined") {
@@ -192,7 +197,34 @@ const TextEditor: React.FC<ITextEditor> = ({
         height="150px"
         lang={config}
         defaultValue={`<script>let a = "The editor's default value"</script>`}
-        setOptions={{ buttonList: buttonList.complex }}
+        setOptions={{
+          buttonList: buttonList.complex,
+          templates: [
+            {
+              name: "Template-1",
+              html: "<p>HTML source1</p>",
+            },
+            {
+              name: "Template-2",
+              html: "<p>HTML source2</p>",
+            },
+          ],
+
+          font: [
+            "Arial",
+            "Georgia",
+            "tahoma",
+            "Trebuchet MS",
+            "Verdana",
+            "WorkSans",
+            "WorkSans_Medium",
+            "WorkSans_SemiBold",
+            "WorkSans_Bold",
+            "WorkSans_MediumItalic",
+            "WorkSans_BoldItalic",
+          ],
+        }}
+        setDefaultStyle="font-family: WorkSans; font-size: 16px;"
         onAudioUpload={handleAudioUpload}
       />
     </div>

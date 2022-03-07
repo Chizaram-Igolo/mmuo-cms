@@ -6,3 +6,4 @@ export { default as AuthTextInput } from "./inputs/authtextinput";
 export { default as TextArea } from "./inputs/textarea";
 export { default as RichTextEditor } from "./inputs/richtexteditor";
 export { default as TextEditor } from "./inputs/texteditor";
+export { default as MultiUploadPreview } from "./multiuploadpreview";
