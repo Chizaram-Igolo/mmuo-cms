@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import SideBar from "../components/sidebar/sidebar";
 import { useAuth } from "../contexts/AuthContext";
 import { auth } from "../firebase/config";
-import Home from "./home";
+import CreateIntro from "./createintro";
 
 interface IContent {
   navWidth: number;
@@ -81,7 +81,7 @@ export default function CMS() {
   return (
     <Routes>
       <Route
-        path="/"
+        path="/create-intro"
         element={
           <Content
             navWidth={navWidth}
@@ -90,7 +90,7 @@ export default function CMS() {
             expandIcon={expandIcon}
             handleChangeWidth={handleChangeWidth}
           >
-            <Home />
+            <CreateIntro />
           </Content>
         }
       />

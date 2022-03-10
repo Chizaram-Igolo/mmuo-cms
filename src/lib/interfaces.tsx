@@ -19,3 +19,23 @@ export interface IModuleGroupValue {
   name: string;
   avatar: string;
 }
+
+export interface AudioFile {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  lastModified: number;
+  lastModifiedDate: Date;
+  webkitRelativePath: "";
+}
+
+export interface FilePost {
+  files?: AudioFile[];
+  totalBytes?: number;
+}
+
+export interface FileDownLoadUrls {
+  id: string;
+  url: string;
+}

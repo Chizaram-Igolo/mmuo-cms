@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useLayoutEffect, useState } from "react";
 import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -11,10 +11,12 @@ import Settings from "./screens/settings";
 import Signout from "./screens/signout";
 import Login from "./screens/login";
 import Signup from "./screens/signup";
-import Home from "./screens/home";
+import CreateIntro from "./screens/createintro";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import Module from "./screens/module";
+import Home from "./screens/home";
+import CustomRouter, { history } from "./components/inputs/customrouter";
 
 interface IContent {
   navWidth: number;
@@ -92,12 +94,13 @@ class App extends Component<P, S> {
     const { handleChangeWidth } = this;
 
     const protectedRoutes = [
-      { route: "/about", component: <Home /> },
+      { route: "/", component: <Home /> },
+      { route: "/create-intro", component: <CreateIntro /> },
       { route: "/settings", component: <Settings /> },
     ];
 
     return (
-      <Router>
+      <CustomRouter history={history}>
         <div className="App">
           <AuthProvider>
             <ConnectivityListener />
@@ -110,7 +113,7 @@ class App extends Component<P, S> {
               {protectedRoutes.map((item) => {
                 return (
                   <Route
-                    path="/*"
+                    path={`${item.route}/*`}
                     element={
                       <PrivateRoute location="/">
                         <Content
@@ -148,7 +151,7 @@ class App extends Component<P, S> {
             </Routes>
           </AuthProvider>
         </div>
-      </Router>
+      </CustomRouter>
     );
   }
 }

@@ -2,6 +2,7 @@ import Toast from "../components/Toast";
 
 export async function uploadMultipleFiles(
   e,
+  files,
   fileArray,
   setTotalBytes,
   addToast,
@@ -23,13 +24,10 @@ export async function uploadMultipleFiles(
       fileArray.length &&
       fileArray.findIndex((item) => item.name === newFile.name) !== -1
     ) {
-      addToast(
-        <Toast children="You have already included this audio file." />,
-        {
-          appearance: "error",
-          autoDismiss: true,
-        }
-      );
+      addToast(<Toast children="You have already included this file." />, {
+        appearance: "error",
+        autoDismiss: true,
+      });
 
       fileUploadRef.current.value = null;
       return;
@@ -42,6 +40,10 @@ export async function uploadMultipleFiles(
         name: newFile.name,
         size: newFile.size,
       });
+
+      newFile["id"] = i;
+
+      files.push(newFile);
 
       setLoading(false);
     }

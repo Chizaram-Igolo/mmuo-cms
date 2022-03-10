@@ -175,13 +175,6 @@ const TextEditor: React.FC<ITextEditor> = ({
 
   // @ts-ignore
   function handleAudioUpload(targetElement) {
-    if (typeof window !== "undefined") {
-      var sel = window.getSelection(); // Gets selection
-
-      // @ts-ignore
-      console.log(sel!.parentElement);
-    }
-
     // @ts-ignore
     (targetElement as HTMLAudioElement).controlsList =
       "nodownload noplaybackrate";

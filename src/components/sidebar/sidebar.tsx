@@ -7,6 +7,8 @@ import {
   faArrowLeft,
   faGear,
   faRightFromBracket,
+  faPen,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useAuth } from "../../contexts/AuthContext";
@@ -69,12 +71,14 @@ export default function SideBar(props: ISideBar) {
   }
 
   const routes = [
+    { to: "/", label: "Home", icon: faHome },
     {
-      to: "/",
+      to: "/modules",
       label: "Modules",
       icon: faBox,
       moduleGroups: mGs,
     },
+    { to: "/create-intro", label: "Create", icon: faPen },
     { to: "/settings", label: "Settings", icon: faGear },
   ];
 
