@@ -92,13 +92,6 @@ export default function useStorage(post: FilePost) {
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((url: string) => {
               if (file.type.includes("audio")) {
-                // setFileDownloadUrls((prevState) => [
-                //   ...prevState,
-                //   { url: url, id: file["id"] },
-                // ]);
-
-                // console.log(url);
-
                 fileDownLoadUrls.push({ url: url, id: file["id"] });
               }
             });

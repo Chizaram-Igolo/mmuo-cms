@@ -11,6 +11,7 @@ body {
   font-size: 100%;
   font-family: "WorkSans", "Helvetica", sans-serif;
   background-color: #f9fafe;
+  min-width: 800px !important;
 }
 
 a {
@@ -110,6 +111,7 @@ a {
 }
 
 .content-container-expanded {
+  min-width: 850px !important;
   width: calc(100vw - 160px);
   float: left;
   margin-left: 140px;
@@ -119,6 +121,7 @@ a {
 }
 
 .content-container-collapsed {
+  min-width: 850px !important;
   width: calc(100vw - 340px);
   float: left;
   margin-left: 320px;

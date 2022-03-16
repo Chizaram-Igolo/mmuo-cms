@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { projectFirestore } from "../firebase/config";
 import { IModules } from "../lib/interfaces";
 
-export default function useGetModuleGroups() {
+export default function useGetModuleGroups(readCollection: string) {
   const [loading, setLoading] = useState(true);
   const [moduleGroups, setModuleGroups] = useState([]);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ export default function useGetModuleGroups() {
 
   useEffect(() => {
     const q = query(
-      collection(projectFirestore, "moduleGroups"),
+      collection(projectFirestore, readCollection),
       orderBy("date", "asc")
     );
 

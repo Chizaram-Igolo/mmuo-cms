@@ -1,4 +1,6 @@
 import TopBarProgress from "react-topbar-progress-indicator";
+import PlainListCollapse from "../components/plainlistcollapse";
+import useGetDrafts from "../hooks/useGetDrafts";
 import useGetModules from "../hooks/useGetModules";
 
 TopBarProgress.config({
@@ -12,11 +14,14 @@ TopBarProgress.config({
   shadowColor: "rgba(0, 0, 0, .5)",
 });
 
-export default function Settings() {
+export default function Home() {
+  const { deletedModules } = useGetModules();
+
   return (
     <section className="py-4 pb-24 px-8 md:px-18 lg:px-20 xl:px-24 z-20 min-h-[28rem] bg-white border border-gray-100">
       <div className="py-6 w-[100%]">
-        <h3 className="mt-[20px]">Settings</h3>
+        <h3 className="mt-[20px]">Course Content</h3>
+        <PlainListCollapse modules={deletedModules} />
       </div>
     </section>
   );

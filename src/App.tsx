@@ -17,6 +17,8 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Module from "./screens/module";
 import Home from "./screens/home";
 import CustomRouter, { history } from "./components/inputs/customrouter";
+import Drafts from "./screens/drafts";
+import Trash from "./screens/Trash";
 
 interface IContent {
   navWidth: number;
@@ -96,6 +98,8 @@ class App extends Component<P, S> {
     const protectedRoutes = [
       { route: "/", component: <Home /> },
       { route: "/create-intro", component: <CreateIntro /> },
+      { route: "/drafts", component: <Drafts /> },
+      { route: "/trash", component: <Trash /> },
       { route: "/settings", component: <Settings /> },
     ];
 

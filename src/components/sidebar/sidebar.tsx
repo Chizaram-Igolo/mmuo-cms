@@ -9,14 +9,16 @@ import {
   faRightFromBracket,
   faPen,
   faHome,
+  faPenRuler,
+  IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import useGetModuleGroups from "../../hooks/useGetModuleGroups";
-import useGetModuleList from "../../hooks/useGetModuleLists";
+import useGetModules from "../../hooks/useGetModules";
+import useGetDrafts from "../../hooks/useGetDrafts";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { IModule, IModules } from "../../lib/interfaces";
-import { useEffect, useState } from "react";
 
 interface ISideBar {
   width: number;
@@ -27,37 +29,10 @@ interface ISideBar {
 
 export default function SideBar(props: ISideBar) {
   const { user, signout } = useAuth();
-  const { moduleGroups } = useGetModuleGroups();
-  const { docs } = useGetModuleList("detailed");
-  const [mGs, setmGs] = useState([]);
+  const { modules, deletedModules } = useGetModules();
+  const { drafts } = useGetDrafts();
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    let moduleGroups_clone = [];
-    moduleGroups_clone = moduleGroups.slice(0);
-
-    setmGs([]);
-
-    for (let i = 0; i < docs.length; i++) {
-      let idx = moduleGroups_clone.findIndex(
-        (item) =>
-          (item as IModules).moduleGroupId ===
-          (docs[i] as IModule).moduleGroupId
-      );
-
-      if (
-        idx !== -1 &&
-        (moduleGroups_clone[idx] as IModules).modules.findIndex(
-          (item) => item.name === (docs[i] as IModule).name
-        ) === -1
-      ) {
-        (moduleGroups_clone[idx] as IModules).modules.push(docs[i]);
-      }
-    }
-
-    setmGs(moduleGroups_clone);
-  }, [moduleGroups, docs]);
 
   const { shouldHideNavText, expandIcon } = props;
 
@@ -70,17 +45,46 @@ export default function SideBar(props: ISideBar) {
     navigate("/");
   }
 
-  const routes = [
+  interface IRoute {
+    to: string;
+    label: string;
+    icon: IconDefinition;
+    moduleGroups?: IModules[];
+    deletedModules?: IModule[];
+    count?: number;
+  }
+
+  const routes: IRoute[] = [
     { to: "/", label: "Home", icon: faHome },
     {
       to: "/modules",
       label: "Modules",
       icon: faBox,
-      moduleGroups: mGs,
+      count: modules.length,
     },
     { to: "/create-intro", label: "Create", icon: faPen },
     { to: "/settings", label: "Settings", icon: faGear },
   ];
+
+  if (drafts.length > 0) {
+    routes.push({
+      to: "/drafts",
+      label: "Drafts",
+      icon: faPenRuler,
+      count: drafts.length,
+    });
+  }
+
+  if (deletedModules.length > 0) {
+    routes.push({
+      to: "/trash",
+      label: "Trash",
+      icon: faTrashCan,
+      count: deletedModules.length,
+    });
+  }
+
+  console.log(deletedModules);
 
   return (
     <nav
@@ -175,6 +179,8 @@ export default function SideBar(props: ISideBar) {
                 shouldHideNavText={shouldHideNavText}
                 key={item.label}
                 moduleGroups={item.moduleGroups}
+                deletedModules={item.deletedModules}
+                count={item.count}
               />
             );
           })}

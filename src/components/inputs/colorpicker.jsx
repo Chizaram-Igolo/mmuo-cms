@@ -23,7 +23,7 @@ const ColorPicker = ({ label, value, colors, onChangeFunc }) => {
           <div className="mb-5">
             <div className="flex items-center">
               <div>
-                <Listbox.Label className="block text-sm font-medium text-gray-700">
+                <Listbox.Label className="block text-base font-medium text-gray-700">
                   {label}
                 </Listbox.Label>
                 <input
@@ -39,7 +39,7 @@ const ColorPicker = ({ label, value, colors, onChangeFunc }) => {
                   }}
                 />
               </div>
-              <div className="relative ml-3 mt-5" ref={dropdownRef}>
+              <div className="relative ml-3 mt-6" ref={dropdownRef}>
                 <button
                   type="button"
                   onClick={toggleIsOpen}

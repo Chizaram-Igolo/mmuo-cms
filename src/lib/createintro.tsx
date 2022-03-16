@@ -20,7 +20,8 @@ export default async function submitHandler(
   moduleColor: string,
   setLoading: (loading: boolean) => void,
   addToast: AddToast,
-  isDraft = false
+  isDraft = false,
+  handleOnAddDoc: () => void
 ) {
   const { name, moduleGroupTextInput } = values;
 
@@ -36,11 +37,20 @@ export default async function submitHandler(
 
   // Store the last used moduleGroup name for use later.
   localStorage.setItem("moduleGroup", moduleGroup as string);
+  handleOnAddDoc();
+
+  let writeCollection = "moduleGroups";
+  let writeSubCollection = "modules";
+
+  if (isDraft) {
+    writeCollection = "draftGroups";
+    writeSubCollection = "drafts";
+  }
 
   try {
     // Check that document exists.
     const docRef = query(
-      collectionGroup(projectFirestore, "modules"),
+      collectionGroup(projectFirestore, writeSubCollection),
       where("moduleGroup", "==", moduleGroup)
     );
 
@@ -50,9 +60,9 @@ export default async function submitHandler(
       await addDoc(
         collection(
           projectFirestore,
-          "moduleGroups",
+          writeCollection,
           docsSnap.docs[0].ref.parent.parent!.id,
-          "modules"
+          writeSubCollection
         ),
         {
           name,
@@ -63,13 +73,18 @@ export default async function submitHandler(
         }
       );
     } else {
-      const doc = await addDoc(collection(projectFirestore, "moduleGroups"), {
+      const doc = await addDoc(collection(projectFirestore, writeCollection), {
         moduleGroup,
         date: timestamp(),
       });
 
       await addDoc(
-        collection(projectFirestore, "moduleGroups", doc.id, "modules"),
+        collection(
+          projectFirestore,
+          writeCollection,
+          doc.id,
+          writeSubCollection
+        ),
         {
           name,
           intro,

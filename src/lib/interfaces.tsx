@@ -6,6 +6,8 @@ export interface IModule {
   moduleId: string;
   moduleGroup?: string;
   moduleGroupId: string;
+  isDeleted?: boolean;
+  date?: object;
 }
 
 export interface IModules {

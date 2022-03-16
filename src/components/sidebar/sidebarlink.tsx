@@ -3,7 +3,7 @@ import { faEllipsis, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 import { Link, useMatch } from "react-router-dom";
-import { IModules } from "../../lib/interfaces";
+import { IModule, IModules } from "../../lib/interfaces";
 
 interface ISideBarLink {
   to: string;
@@ -11,6 +11,8 @@ interface ISideBarLink {
   icon: IconDefinition;
   shouldHideNavText: boolean;
   moduleGroups?: IModules[];
+  deletedModules?: IModule[];
+  count?: number;
 }
 
 function SideBarLink({
@@ -19,6 +21,8 @@ function SideBarLink({
   icon,
   shouldHideNavText,
   moduleGroups,
+  deletedModules,
+  count,
 }: ISideBarLink) {
   const match = useMatch({ path: to });
 
@@ -42,8 +46,32 @@ function SideBarLink({
 
   return (
     <li
-      className={`h-auto py-[0.20rem] border-b border-gray-300 last:border-b-0`}
+      className={`h-auto py-[0.20rem] border-b border-gray-300/50 last:border-b-0`}
     >
+      {deletedModules && (
+        <span
+          className={`w-[100%] flex pt-[6px] pb-[0px] px-4 border-l-4 cursor-pointer ${
+            match ? "border-gray-800" : "border-transparent"
+          }`}
+          onClick={toggleShowSubList}
+        >
+          <span className={`basis-[15%] text-[1.2rem] text-gray-800`}>
+            <FontAwesomeIcon icon={icon} />
+            <span className="absolute right-5 bg-gray-800 px-1 py-0 ml-2 rounded text-xs text-white">
+              {deletedModules.length}
+            </span>
+          </span>
+
+          <span
+            className={`basis-[85%] h-[inherit] inline-block pr-[10px] pl-[10px]
+              ${shouldHideNavText === true ? "hidden" : ""}
+            `}
+          >
+            {title}
+          </span>
+        </span>
+      )}
+
       {moduleGroups && (
         <span
           className={`w-[100%] flex pt-[6px] pb-[0px] px-4 border-l-4 cursor-pointer ${
@@ -74,6 +102,11 @@ function SideBarLink({
         >
           <span className={`basis-[15%] text-[1.2rem] text-gray-800`}>
             <FontAwesomeIcon icon={icon} />
+            {count && (
+              <span className="absolute right-5 bg-gray-800 px-1 py-0 ml-2 rounded text-xs text-white">
+                {count}
+              </span>
+            )}
           </span>
 
           <span

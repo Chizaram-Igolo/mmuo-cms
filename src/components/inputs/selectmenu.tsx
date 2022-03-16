@@ -33,7 +33,7 @@ export default function SelectMenu({
     <Listbox value={value} onChange={onChangeFunc}>
       {({ open }) => (
         <>
-          <Listbox.Label className="block text-sm font-medium text-gray-700">
+          <Listbox.Label className="block text-base font-medium text-gray-700">
             {label}
           </Listbox.Label>
           <div
@@ -50,7 +50,7 @@ export default function SelectMenu({
                   alt=""
                   className="flex-shrink-0 h-6 w-6 rounded-full"
                 /> */}
-                <span className="ml-3 block truncate">{value}</span>
+                <span className="ml-3 block truncate text-base">{value}</span>
               </span>
               <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <SelectorIcon
@@ -90,7 +90,7 @@ export default function SelectMenu({
                           <span
                             className={classNames(
                               selected ? "semibold" : "font-normal",
-                              "ml-3 block truncate"
+                              "ml-3 block truncate text-base"
                             )}
                           >
                             {item.moduleGroup}

@@ -81,7 +81,7 @@ export default function IconPicker({ label }: ISelectMenu) {
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
         <>
-          <Listbox.Label className="block text-sm font-medium text-gray-700">
+          <Listbox.Label className="block text-base font-medium text-gray-700">
             {label}
           </Listbox.Label>
           <div className="mt-1 relative">
@@ -92,7 +92,9 @@ export default function IconPicker({ label }: ISelectMenu) {
                   alt=""
                   className="flex-shrink-0 h-6 w-6 rounded-full"
                 />
-                <span className="ml-3 block truncate">{selected.name}</span>
+                <span className="ml-3 block truncate text-base">
+                  {selected.name}
+                </span>
               </span>
               <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <SelectorIcon
@@ -132,7 +134,7 @@ export default function IconPicker({ label }: ISelectMenu) {
                           <span
                             className={classNames(
                               selected ? "font-semibold" : "font-normal",
-                              "ml-3 block truncate"
+                              "ml-3 block truncate text-base"
                             )}
                           >
                             {person.name}
@@ -143,7 +145,7 @@ export default function IconPicker({ label }: ISelectMenu) {
                           <span
                             className={classNames(
                               active ? "text-white" : "text-indigo-600",
-                              "absolute inset-y-0 right-0 flex items-center pr-4"
+                              "absolute inset-y-0 right-0 flex items-center pr-4 text-base"
                             )}
                           >
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />

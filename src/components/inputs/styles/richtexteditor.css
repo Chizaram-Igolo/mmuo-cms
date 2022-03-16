@@ -80,3 +80,19 @@ audio::-webkit-media-controls-toggle-closed-captions-button {
 audio::-webkit-media-controls-overlay-enclosure {
   overflow: hidden;
 }
+
+.sun-editor .se-btn-select {
+  width: 88px !important;
+}
+
+.sun-editor .se-btn-select .txt {
+  font-size: 14px !important;
+}
+
+.sun-editor .se-wrapper .se-placeholder {
+  font-size: 1rem !important;
+}
+
+.sun-editor-editable {
+  padding-top: 14px !important;
+}

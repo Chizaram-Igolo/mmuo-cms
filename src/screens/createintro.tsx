@@ -27,7 +27,7 @@ import { history } from "../components/inputs/customrouter";
 const CreateIntro: React.FC = () => {
   const formikRef = useRef(null);
 
-  const { moduleGroups } = useGetModuleGroups();
+  const { moduleGroups } = useGetModuleGroups("moduleGroups");
   const { addToast } = useToasts();
 
   const [moduleGroupSelect, setModuleGroupSelect] = useState(
@@ -51,20 +51,28 @@ const CreateIntro: React.FC = () => {
 
   const [useModuleGroupSelect, setUseModuleGroupSelect] = useState(true);
 
-  useEffect(() => {
-    const unlisten = history.listen(({ location, action }) => {
-      console.log(action, location.pathname, location.state);
+  const lSModuleGroupIsSet = localStorage.getItem("moduleGroup");
 
-      submitHandler(
-        // @ts-ignore
-        formikRef.current.values,
-        moduleGroupSelect,
-        intro,
-        moduleColor,
-        setLoading,
-        addToast,
-        true
-      );
+  function handleOnAddDoc() {
+    setModuleGroupSelect(localStorage.getItem("moduleGroup") as string);
+  }
+
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      // @ts-ignore
+      if ((formikRef.current.values as FormValues).name || intro) {
+        submitHandler(
+          // @ts-ignore
+          formikRef.current.values,
+          moduleGroupSelect,
+          intro,
+          moduleColor,
+          setLoading,
+          addToast,
+          true,
+          handleOnAddDoc
+        );
+      }
     });
 
     return unlisten;
@@ -183,7 +191,8 @@ const CreateIntro: React.FC = () => {
               moduleColor,
               setLoading,
               addToast,
-              false
+              false,
+              handleOnAddDoc
             ).then(() => {
               setSubmitting(false);
               resetForm();
@@ -203,12 +212,12 @@ const CreateIntro: React.FC = () => {
             isSubmitting,
           }) => (
             <form className="relative" onSubmit={handleSubmit}>
-              <p className="mb-6 text-sm font-medium text-slate-700">
+              <p className="mb-6 text-base font-medium text-slate-700">
                 Use Module Groups to organize your Modules.
               </p>
               <div className="w-full flex gap-x-4">
-                {useModuleGroupSelect ? (
-                  <div className="flex-1 mb-6">
+                {useModuleGroupSelect && lSModuleGroupIsSet ? (
+                  <div className="flex-1 mb-8">
                     <SelectMenu
                       name="moduleGroupSelect"
                       label="Select existing Module Group"
@@ -222,15 +231,15 @@ const CreateIntro: React.FC = () => {
                     />
 
                     {errors.moduleGroupSelect && touched.moduleGroupSelect && (
-                      <span className="block text-sm pt-2 text-red-600">
+                      <span className="block text-base pt-2 text-red-600">
                         {errors.moduleGroupSelect}
                       </span>
                     )}
                   </div>
                 ) : (
                   <div className="flex-1">
-                    <label className="block mb-6">
-                      <span className="block text-sm font-medium text-slate-700">
+                    <label className="block mb-8">
+                      <span className="block text-base font-medium text-slate-700">
                         Create new Module Group
                       </span>
                       <TextInput
@@ -243,7 +252,7 @@ const CreateIntro: React.FC = () => {
                       />
                       {errors.moduleGroupTextInput &&
                         touched.moduleGroupTextInput && (
-                          <span className="block text-sm pt-2 text-red-600">
+                          <span className="block text-base pt-2 text-red-600">
                             {errors.moduleGroupTextInput}
                           </span>
                         )}
@@ -253,17 +262,21 @@ const CreateIntro: React.FC = () => {
 
                 <div className="flex-1">
                   <label htmlFor="" className="block mb-6">
-                    <p className="pt-3 block text-sm font-medium text-slate-700">
-                      or &nbsp;
-                      <button
-                        type="button"
-                        className="underline underline-offset-2"
-                        onClick={toggleUseModuleGroupSelect}
-                      >
-                        {useModuleGroupSelect
-                          ? "Create new Module Group"
-                          : "Select existing Module Group"}
-                      </button>
+                    <p className="pt-3 block text-base font-medium text-slate-700">
+                      {lSModuleGroupIsSet && (
+                        <>
+                          or &nbsp;
+                          <button
+                            type="button"
+                            className="underline underline-offset-2"
+                            onClick={toggleUseModuleGroupSelect}
+                          >
+                            {useModuleGroupSelect
+                              ? "Create new Module Group"
+                              : "Select existing Module Group"}
+                          </button>
+                        </>
+                      )}
                     </p>
                   </label>
                 </div>
@@ -271,8 +284,8 @@ const CreateIntro: React.FC = () => {
 
               <div className="w-full flex gap-x-4">
                 <div className="basis-[50%]">
-                  <label className="block mb-6">
-                    <span className="block text-sm font-medium text-slate-700">
+                  <label className="block mb-10">
+                    <span className="block text-base font-medium text-slate-700">
                       Name
                     </span>
                     <TextInput
@@ -284,14 +297,14 @@ const CreateIntro: React.FC = () => {
                       onChangeFunc={handleChange}
                     />
                     {errors.name && touched.name && (
-                      <span className="block text-sm pt-2 text-red-600">
+                      <span className="block text-base pt-2 text-red-600">
                         {errors.name}
                       </span>
                     )}
                   </label>
                 </div>
 
-                <div className="basis-[20%]">
+                <div className="basis-[20%] mt-1">
                   <ColorPicker
                     label="Select Color"
                     value={moduleColor}
@@ -300,7 +313,7 @@ const CreateIntro: React.FC = () => {
                   />
                 </div>
 
-                <div className="basis-[30%]">
+                <div className="basis-[30%] mt-1">
                   <IconPicker label="Module Icon" />
                 </div>
               </div>
@@ -308,7 +321,7 @@ const CreateIntro: React.FC = () => {
               <div className="w-full flex gap-x-4">
                 <div className="basis-[100%]">
                   <label className="block mb-3">
-                    <span className="block text-sm font-medium text-slate-700">
+                    <span className="block text-base font-medium text-slate-700">
                       Upload the audio files you would like to use in your
                       "Introduction" here:
                     </span>
@@ -372,8 +385,8 @@ const CreateIntro: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-6">
-                <span className="block text-sm font-medium text-slate-700">
+              <div className="mt-10">
+                <span className="block text-base font-medium text-slate-700">
                   Introduction (Preface)
                 </span>
 
