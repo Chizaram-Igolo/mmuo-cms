@@ -8,7 +8,7 @@ interface ICollapse {
 
 const Collapse: React.FC<ICollapse> = ({ modules }) => {
   return (
-    <div className="w-full pt-8">
+    <div className="w-full">
       <div className="w-full py-2 mx-auto bg-white rounded-2xl">
         {modules.map((item, idx) => (
           <Disclosure as="div" className={`${idx > 0 ? "mt-2" : ""}`}>

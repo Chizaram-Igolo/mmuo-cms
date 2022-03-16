@@ -70,6 +70,14 @@ a {
     @apply font-extrabold;
   }
 
+  h4 {
+    @apply text-xl;
+    font-family: "WorkSans_Bold", sans-serif;
+    @apply text-stone-800;
+    @apply font-extrabold;
+    @apply mt-4;
+  }
+
   .header-title {
     font-family: "WorkSans_BoldItalic", sans-serif;
   }

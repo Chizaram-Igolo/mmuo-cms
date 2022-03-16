@@ -405,7 +405,7 @@ const CreateIntro: React.FC = () => {
                   !!Object.keys(errors).length ||
                   isSubmitting
                 }
-                className="absolute right-0 mt-4 bg-green-500 hover:bg-green-600 active:bg-green-900 disabled:bg-gray-400 text-white px-6 py-2 rounded-sm focus:outline-none active:outline-none"
+                className="absolute right-0 mt-4 bg-green-500 hover:bg-green-600 active:bg-green-900 disabled:bg-gray-400 text-white px-6 py-2 rounded-md focus:outline-none active:outline-none active:ring-4 focus:ring-green-200 active:ring-green-200 active:ring-offset-1"
               >
                 Submit
               </button>

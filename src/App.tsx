@@ -1,4 +1,4 @@
-import React, { Component, useLayoutEffect, useState } from "react";
+import React, { Component } from "react";
 import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -19,6 +19,7 @@ import Home from "./screens/home";
 import CustomRouter, { history } from "./components/inputs/customrouter";
 import Drafts from "./screens/drafts";
 import Trash from "./screens/Trash";
+import Modules from "./screens/modules";
 
 interface IContent {
   navWidth: number;
@@ -98,6 +99,7 @@ class App extends Component<P, S> {
     const protectedRoutes = [
       { route: "/", component: <Home /> },
       { route: "/create-intro", component: <CreateIntro /> },
+      { route: "/modules", component: <Modules /> },
       { route: "/drafts", component: <Drafts /> },
       { route: "/trash", component: <Trash /> },
       { route: "/settings", component: <Settings /> },

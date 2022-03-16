@@ -19,6 +19,7 @@ import useGetModules from "../../hooks/useGetModules";
 import useGetDrafts from "../../hooks/useGetDrafts";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { IModule, IModules } from "../../lib/interfaces";
+import { useEffect, useState } from "react";
 
 interface ISideBar {
   width: number;
@@ -31,6 +32,19 @@ export default function SideBar(props: ISideBar) {
   const { user, signout } = useAuth();
   const { modules, deletedModules } = useGetModules();
   const { drafts } = useGetDrafts();
+  const [moduleCount, setModuleCount] = useState(
+    modules.reduce((acc, item) => {
+      return acc + item.modules.length;
+    }, 0)
+  );
+
+  useEffect(() => {
+    let c = modules.reduce((acc, item) => {
+      return acc + item.modules.length;
+    }, 0);
+
+    setModuleCount(c);
+  });
 
   const navigate = useNavigate();
 
@@ -60,7 +74,7 @@ export default function SideBar(props: ISideBar) {
       to: "/modules",
       label: "Modules",
       icon: faBox,
-      count: modules.length,
+      count: moduleCount,
     },
     { to: "/create-intro", label: "Create", icon: faPen },
     { to: "/settings", label: "Settings", icon: faGear },
@@ -84,8 +98,6 @@ export default function SideBar(props: ISideBar) {
     });
   }
 
-  console.log(deletedModules);
-
   return (
     <nav
       className={`fixed min-w-[80px] w-[20%] min-h-[100vh] bg-white border-r-2 border-stone-200 z-50`}
@@ -104,7 +116,7 @@ export default function SideBar(props: ISideBar) {
         <div>
           {user && (
             <>
-              <div className="pt-2 border-gray-400">
+              <div className="pt-2">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     {user.photoURL && (

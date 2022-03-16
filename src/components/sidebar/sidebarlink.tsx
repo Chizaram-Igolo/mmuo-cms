@@ -102,9 +102,9 @@ function SideBarLink({
         >
           <span className={`basis-[15%] text-[1.2rem] text-gray-800`}>
             <FontAwesomeIcon icon={icon} />
-            {count && (
-              <span className="absolute right-5 bg-gray-800 px-1 py-0 ml-2 rounded text-xs text-white">
-                {count}
+            {count && count > 0 && (
+              <span className="absolute right-2 bg-gray-800 px-1 py-0 ml-2 rounded text-xs text-white">
+                {count > 99 ? "99+" : count}
               </span>
             )}
           </span>
